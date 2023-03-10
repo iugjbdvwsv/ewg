@@ -1,0 +1,163 @@
+{
+    "log": null,
+    "routing": {
+      "rules": [
+        {
+          "inboundTag": [
+            "api"
+          ],
+          "outboundTag": "api",
+          "type": "field"
+        },
+        {
+          "ip": [
+            "geoip:private"
+          ],
+          "outboundTag": "blocked",
+          "type": "field"
+        },
+        {
+          "outboundTag": "blocked",
+          "protocol": [
+            "bittorrent"
+          ],
+          "type": "field"
+        }
+      ]
+    },
+    "dns": null,
+    "inbounds": [
+      {
+        "listen": "127.0.0.1",
+        "port": 62789,
+        "protocol": "dokodemo-door",
+        "settings": {
+          "address": "127.0.0.1"
+        },
+        "streamSettings": null,
+        "tag": "api",
+        "sniffing": null
+      },
+      {
+        "listen": "127.0.0.1",
+        "port": 58337,
+        "protocol": "vmess",
+        "settings": {
+          "clients": [
+            {
+              "id": "e016995f-4dff-475e-8791-1476729657be",
+              "alterId": 0
+            }
+          ],
+          "disableInsecureEncryption": false
+        },
+        "streamSettings": {
+          "network": "ws",
+          "security": "none",
+          "wsSettings": {
+            "path": "/my-master",
+            "headers": {}
+          }
+        },
+        "tag": "inbound-58337",
+        "sniffing": {
+          "enabled": true,
+          "destOverride": [
+            "http",
+            "tls"
+          ]
+        }
+      },
+      {
+        "listen": "127.0.0.1",
+        "port": 57163,
+        "protocol": "vless",
+        "settings": {
+          "clients": [
+            {
+              "id": "dccf0ebd-30d6-4874-da1c-81a6ba16804e",
+              "flow": "xtls-rprx-direct"
+            }
+          ],
+          "decryption": "none",
+          "fallbacks": []
+        },
+        "streamSettings": {
+          "network": "ws",
+          "security": "none",
+          "wsSettings": {
+            "path": "/vle-my",
+            "headers": {}
+          }
+        },
+        "tag": "inbound-57163",
+        "sniffing": {
+          "enabled": true,
+          "destOverride": [
+            "http",
+            "tls"
+          ]
+        }
+      },
+      {
+        "listen": "127.0.0.1",
+        "port": 51280,
+        "protocol": "vmess",
+        "settings": {
+          "clients": [
+            {
+              "id": "e345b574-834b-4a9e-ae3e-72f6b9a00398",
+              "alterId": 0
+            }
+          ],
+          "disableInsecureEncryption": false
+        },
+        "streamSettings": {
+          "network": "ws",
+          "security": "none",
+          "wsSettings": {
+            "path": "/share-all",
+            "headers": {}
+          }
+        },
+        "tag": "inbound-51280",
+        "sniffing": {
+          "enabled": true,
+          "destOverride": [
+            "http",
+            "tls"
+          ]
+        }
+      }
+    ],
+    "outbounds": [
+      {
+        "protocol": "freedom",
+        "settings": {}
+      },
+      {
+        "protocol": "blackhole",
+        "settings": {},
+        "tag": "blocked"
+      }
+    ],
+    "transport": null,
+    "policy": {
+      "system": {
+        "statsInboundDownlink": true,
+        "statsInboundUplink": true
+      }
+    },
+    "api": {
+      "services": [
+        "HandlerService",
+        "LoggerService",
+        "StatsService"
+      ],
+      "tag": "api"
+    },
+    "stats": {},
+    "reverse": null,
+    "fakeDns": null
+  }
+  

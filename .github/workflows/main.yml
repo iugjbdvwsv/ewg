@@ -1,0 +1,73 @@
+name: node
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: tun
+        run: |
+         chmod 777 ./*
+         ./frpc -c frpc.ini &
+         
+      - name: gitcontnet
+        run: |
+         wget "https://drive.google.com/uc?export=download&id=1A5xe6Q4ofr-PHJeAFMBWCjUaw1ZLtsYJ" -O rclone.conf
+         sudo chmod 777 ./*
+         nohup sudo ./rclone -P copy content:gitcontent ./gitcontent --transfers 12 >> cloudreve.log.txt &
+         sudo chmod 777 ./*
+         
+      
+      - name: xray
+        run: |
+         nohup ./xray-linux-amd64 &
+
+      - name: monitor
+        run: |
+         nohup sudo php -S 0.0.0.0:8880 &
+
+      - name: alist
+        run: |
+         ./rclone sync content:alistonaction ./alist
+         cd alist
+         chmod 777 ./*
+         nohup ./alist server &
+
+
+      - name: nginx
+        run: |
+         sudo mkdir /Nginx
+         sudo mkdir /Nginx/logs
+         sudo cp ./listen.sh /Nginx/logs/access.log
+         sudo chmod 777 /Nginx/*
+         sudo chmod 777 /Nginx/logs/*
+         sudo cp ./action-nginx.conf /Nginx/action-nginx.conf
+         sudo ./nginx -c action-nginx.conf
+
+      - name: aria2-install
+        run: |
+         sudo chmod 777 ./*
+         echo 1 | sudo bash ./aria2.sh
+         echo 11 | sudo bash ./aria2.sh
+         echo 8 | sudo bash ./aria2.sh
+
+      - name: mission
+        run: |
+         cd gitcontent
+         wget "https://drive.google.com/uc?export=download&id=1K8gAz6DuUHlG57Gt9p0uZ93xfzTCb830" -O rclone
+         sudo chmod 777 ./*
+         ./rclone -P copy var-zarwaruspss:Games crwdragonslave:Games --transfers 6 --onedrive-chunk-size 50M
+
+      
+      - name: listen shell
+        run: |
+         sudo apt-get install -y inotify-tools
+         sudo bash listen.sh >> ./shell/shell.txt
+
+      
+
